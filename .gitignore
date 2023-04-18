@@ -1,7 +1,7 @@
-venv/*
+venv/
 instance/*
 !instance/.gitignore
 .webassets-cache
-.venv
+.env
 
 # End of https://mrkandreev.name/snippets/gitignore-generator/#Flask
