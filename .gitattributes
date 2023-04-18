@@ -3,3 +3,5 @@
 *.js linguist-detectable=false
 *.c linguist-detectable=false
 venv/* linguist-detectable=false
+venv/*/* linguist-detectable=false
+venv/*/*/* linguist-detectable=false
