@@ -1,7 +1,0 @@
-*.c linguist-detectable=false
-*.sh linguist-detectable=false
-*.js linguist-detectable=false
-*.c linguist-detectable=false
-venv/* linguist-detectable=false
-venv/*/* linguist-detectable=false
-venv/*/*/* linguist-detectable=false
