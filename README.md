@@ -244,9 +244,139 @@ class Node:
         return self._search_recursive(blog_post_id, self.root)
  ```
 
+Usamos a BST para criar uma API para buscar Posts especificados por ID onde inserimos todos os post em uma arvore binaria comparando seus ids:
+```
+# usaremos binarysearchtree
+@app.route("/blog_post/<blog_post_id>",methods=["GET"])
+def get_one_blog_posts(blog_post_id):
+    blog_posts = BlogPost.query.all()
+    random.shuffle(blog_posts)
 
+    bst = binarySearchTree.BinarySearchTree()
 
+    for post in blog_posts:
+        bst.insert({
+            "id": post.id,
+            "title":post.title,
+            "body":post.body,
+            "user_id":post.user_id,
+        })
+    post = bst.search(blog_post_id)
 
+    if not post:
+        return jsonify({"message": "post not found"})
+    else:
+        return post
+```
+
+ ### Fila ou Queue
+ A Fila é definida como uma estrutura de dados linear, como uma lista, que segue a metodologia FIFO ( first in, first out), onde os primeiros elementos a serem incluídos, são os primeiros a serem retirados.
+
+ ![queue](img/queue.png)
+
+ Sua implementação é simples, e usamos um Node também. Seguimos o elemento head e o elemento tail e implementamos metodos Enqueue e Dequeue, para adicionar e remover items:
+ ```
+class Node:
+    def __init__(self,data,next_node):
+        self.data = data
+        self.next_node = next_node
+
+class Queue:
+    def __init__(self):
+        self.head = None
+        self.tail = None
+
+    def enqueue(self,data):
+        if self.tail is None and self.head is None:
+            self.tail = self.head = Node(data,None)
+            return
+        self.tail.next_node = Node(data,None)
+        self.tail = self.tail.next_node
+        return
+    
+    def dequeue(self):
+        if self.head is None:
+            return None
+        removed = self.head
+        self.head = self.head.next_node
+        if self.head is None:
+            self.tail = None
+        return removed
+ ```
+ Usamos a fila para criarmos uma rota de uma API que retorna um valor numerico ASCII de todos os posts:
+ ```
+ # queue para converter um post em valor numerico ASCII
+@app.route("/blog_post/numeric_body",methods=["GET"])
+def get_numeric_post_bodies():
+    blog_posts = BlogPost.query.all()
+
+    q = custom_q.Queue()
+
+    for post in blog_posts:
+        q.enqueue(post)
+
+    return_list = []
+
+    for _ in range(len(blog_posts)):
+        post = q.dequeue()
+        numeric_body = 0
+        for char in post.data.body:
+            numeric_body += ord(char)
+        post.data.body = numeric_body
+
+        return_list.append(
+            {
+            "id": post.data.id,
+            "title": post.data.title,
+            "body": post.data.body,
+            "user_id": post.data.user_id
+            }
+        )
+    return jsonify(return_list)
+ ```
+
+ ### Stack ou Pilha
+ A pilha assim como a fila também é uma estrutura de dados linear, porém tem como característica o LIFO (last in first out), onde o primeiro a ser inserido é o último a ser removido. 
+
+ ![stack](img/stack.png)
+
+ Em sau construção mantemos como atributo apenas o topo, e a partir daí vamos removendo elementos:
+ ```
+class Stack:
+    def __init__(self):
+        self.top = None
+
+    def peek(self):
+        return self.top
+    
+    def push(self, data):
+        next_node = self.top
+        new_top = Node(data,next_node)
+        self.top = new_top
+
+    def pop(self):
+        if self.top is None:
+            return None
+        removed = self.top
+        self.top = self.top.next_node
+        return removed
+ ```
+
+Na nossa API usamos a pilha para remover os últimos 10 posts do banco de dados usando o método `pop()` em um loop in `range()`:
+```
+# usamos uma pilha (stack) para deletar os ultimos 10 posts, usando o metodo pop()
+@app.route("/blog_post/delete_last_10",methods=["DELETE"])
+def delete_last_10_blog_posts():
+    blog_post = BlogPost.query.all()
+    s = stack.Stack()
+    for post in blog_post:
+        s.push(post)
+    for _ in range(10):
+        post_to_delete = s.pop()
+        db.session.delete(post_to_delete.data)
+        db.session.commit()
+    return jsonify({"message":"succes"})
+```
 
 
 Para fazer o uso da aplicação em sua máquina:
