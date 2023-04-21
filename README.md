@@ -93,9 +93,7 @@ Primeiramente se usa uma função, chamada de função de espalhamento que gera 
 
  No caso de colisões, para que não haja tantos problemas utilizamos vetores de listas, onde caso o índice gerado pela chave, já possui um elemento, nós encadeamos, formando uma lista naquele índice:
  
-<div style="color:white;">
-    <img style="backgorund-color:black;" src='img/colision.png'>
-</div>
+![colision](img/colision2.png)
 
  No nosso código de exemplo [hashTable.py](hashTable.py), geramos o índex através da função `ord()` que transforma o chave em unicode, além disso, definimos um comprimento fixo de índices no seu contrutor.
 
@@ -184,7 +182,7 @@ Uma **árvore** é uma estrutura de dados composta de nós, com as seguintes car
 1. Cada nó pode ter, no máximo, dois filhos.
 2. Para cada nó, os valores de seus descendentes da esquerda são inferiores ao valor do nó atual, que, por sua vez, é inferior aos nós descendentes da direita (se existirem).
 
-![bst](img/bst.png)
+![bst](img/bst2.png)
 
 No nosso exemplo de cósigo [binarySearchTree.py](binarySearchTree.py), temos uma alteração na estruturação do Node dessa vez, já que ele aponta para outros dois:
 ```
